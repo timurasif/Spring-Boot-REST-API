@@ -3,20 +3,20 @@ package com.example.demo.repositories.interfaces;
 import com.example.demo.models.Products.ProductEntity;
 import com.example.demo.models.TopThreeProductsDTO;
 import com.example.demo.models.TopThreeReorderedProductsDTO;
+import com.example.demo.models.Users.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepoInterface extends JpaRepository<ProductEntity, Integer> {
 
-//    Get the top 3 most ordered products based on number of all orders.
+    Optional<ProductEntity> findById(Integer id);
 
-    /* The term most ordered products is slightly confusing. It can be based on the quantity
-    of that product per order or number of orders it was ordered in. Here I'm assuming
-    the later.*/
+//    Get the top 3 most ordered products based on number of all orders.
     @Query(value = "SELECT p.product_id, p.product_name, count(o.product_id) as count\n" +
             "FROM products as p\n" +
             "Join orders as o on o.product_id=p.product_id\n" +

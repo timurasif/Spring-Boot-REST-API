@@ -3,12 +3,15 @@ package com.example.demo.models.Products;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "Products")
+@Entity
+@Table(name = "Products")
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
