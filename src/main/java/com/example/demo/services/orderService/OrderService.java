@@ -10,11 +10,7 @@ import com.example.demo.repositories.interfaces.ProductRepoInterface;
 import com.example.demo.repositories.interfaces.UsersRepoInterface;
 import com.example.demo.services.helpers.Utils;
 import lombok.AllArgsConstructor;
-import org.hibernate.query.Order;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -25,30 +21,16 @@ public class OrderService {
     private final ProductRepoInterface productRepoInterface;
 
     public OrderEntity createNewOrder(CreateOrderRequest orderToCreate){
-        System.out.println("User Id: " + orderToCreate.getUserID());
-        System.out.println("Product Id: " + orderToCreate.getProductID());
-        System.out.println("Created at: " + orderToCreate.getOrderDate());
 
         String orderCreatedAt = Utils.convertDateFormat(orderToCreate.getOrderDate());
 
-        System.out.println("Updated Created at: " + orderCreatedAt);
+        UserEntity user = usersRepoInterface.findById(orderToCreate.getUserID())
+                .orElseThrow(() -> new ExceptionHandlers.UserNotFoundException("User with ID: " + orderToCreate.getUserID() + " not found!"));
 
-        Optional<UserEntity> userOptional = usersRepoInterface.findById(orderToCreate.getUserID());
-        if(userOptional.isEmpty()){
-            throw new ExceptionHandlers.UserNotFoundException("User with ID: " + orderToCreate.getUserID() + " not found!");
-        }
-        UserEntity user = userOptional.get();
-        System.out.println("User name: " + user.getUserName());
-
-        Optional<ProductEntity> productOptional = productRepoInterface.findById(orderToCreate.getProductID());
-        if(productOptional.isEmpty()){
-            throw new ExceptionHandlers.ProductNotFoundException("Product with ID: " + orderToCreate.getProductID() + " not found!");
-        }
-        ProductEntity product = productOptional.get();
-        System.out.println("Product name: " + product.getProductName());
+        ProductEntity product = productRepoInterface.findById(orderToCreate.getProductID())
+                .orElseThrow(() -> new ExceptionHandlers.ProductNotFoundException("Product with ID: " + orderToCreate.getProductID() + " not found!"));
 
         if(orderToCreate.getTotalAmount() != orderToCreate.getQuantity()*product.getPrice()){
-            System.out.println("Wrong amount...");
             throw new ExceptionHandlers.WrongPriceException(product.getProductName() + "'s price is: " + product.getPrice() + ". Total amount is not correct.");
         }
         OrderEntity orderEntity = OrderEntity.builder()

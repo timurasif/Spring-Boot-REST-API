@@ -18,14 +18,12 @@ public class UserController {
 
     @GetMapping("/get-user")
     @Operation(summary = "Get user by id.")
-    @ResponseBody
     public UserEntity getById(@RequestParam Integer id){
         return userService.getById(id);
     }
 
     @GetMapping("/get-top-three")
     @Operation(summary = "Get the top 3 users who ordered the most products based on the number of all products in the orders.")
-    @ResponseBody
     public List<TopThreeUsersDTO> getTopThree() {
         return userService.getTopThree();
     }

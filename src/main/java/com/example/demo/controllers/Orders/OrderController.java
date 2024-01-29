@@ -18,7 +18,6 @@ public class OrderController {
 
     @PostMapping("/create")
     @Operation(summary = "Create new order.")
-    @ResponseBody
     public Response<Object> createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
         OrderEntity createdOrder = orderService.createNewOrder(createOrderRequest);
         return new Response(200, "Order created successfully.", createdOrder);

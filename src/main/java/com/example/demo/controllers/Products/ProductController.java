@@ -17,14 +17,12 @@ public class ProductController {
 
     @GetMapping("/get-top-three")
     @Operation(summary = "Get the top 3 most ordered products based on number of all orders.")
-    @ResponseBody
     public List<TopThreeProductsDTO> getTopThree() {
         return productService.getTopThree();
     }
 
     @GetMapping("/get-top-three-reordered")
     @Operation(summary = "Get the top 3 most re-ordered products based on each user's first order.")
-    @ResponseBody
     public List<TopThreeReorderedProductsDTO> getTopThreeReordered() {
         return productService.getTopThreeReordered();
     }
