@@ -1,0 +1,1 @@
+SonarCloud dashboard link: https://sonarcloud.io/summary/new_code?id=timurasif_spring-boot-rest-api

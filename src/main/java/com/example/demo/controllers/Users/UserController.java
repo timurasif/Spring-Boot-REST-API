@@ -5,6 +5,8 @@ import com.example.demo.models.Users.UserEntity;
 import com.example.demo.services.userService.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +16,17 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     UserService userService;
 
     @GetMapping("/get-user")
     @Operation(summary = "Get user by id.")
     public UserEntity getById(@RequestParam Integer id){
-        return userService.getById(id);
+        logger.info("Get User request with user Id: {}", id);
+        UserEntity user = userService.getById(id);
+        logger.info("Get User response: {}", user);
+        return user;
     }
 
     @GetMapping("/get-top-three")

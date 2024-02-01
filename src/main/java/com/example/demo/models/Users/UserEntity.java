@@ -23,4 +23,14 @@ public class UserEntity {
     private String email;
     @Column(name = "address")
     private String address;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

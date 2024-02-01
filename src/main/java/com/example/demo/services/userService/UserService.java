@@ -1,9 +1,12 @@
 package com.example.demo.services.userService;
 
+import com.example.demo.exceptions.ExceptionHandlers;
 import com.example.demo.models.TopThreeUsersDTO;
 import com.example.demo.models.Users.UserEntity;
 import com.example.demo.repositories.interfaces.UsersRepoInterface;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,11 +16,18 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private final UsersRepoInterface usersRepoInterface;
 
-    public UserEntity getById(Integer id){
+    public UserEntity getById(Integer id) {
         Optional<UserEntity> user = usersRepoInterface.findById(id);
-        return user.orElse(null);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            logger.error("User with ID {} not found", id);
+            throw new ExceptionHandlers.UserNotFoundException("User with ID " + id + " not found");
+        }
     }
 
     public List<TopThreeUsersDTO> getTopThree(){
