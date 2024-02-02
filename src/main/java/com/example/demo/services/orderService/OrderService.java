@@ -10,29 +10,40 @@ import com.example.demo.repositories.interfaces.ProductRepoInterface;
 import com.example.demo.repositories.interfaces.UsersRepoInterface;
 import com.example.demo.services.helpers.Utils;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class OrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
     private final OrderRepoInterface orderRepoInterface;
     private final UsersRepoInterface usersRepoInterface;
     private final ProductRepoInterface productRepoInterface;
 
-    public OrderEntity createNewOrder(CreateOrderRequest orderToCreate){
-
+    public OrderEntity createNewOrder(CreateOrderRequest orderToCreate) {
         String orderCreatedAt = Utils.convertDateFormat(orderToCreate.getOrderDate());
 
         UserEntity user = usersRepoInterface.findById(orderToCreate.getUserID())
-                .orElseThrow(() -> new ExceptionHandlers.UserNotFoundException("User with ID: " + orderToCreate.getUserID() + " not found!"));
+                .orElseThrow(() -> {
+                    logger.error("User with ID {} not found", orderToCreate.getUserID());
+                    return new ExceptionHandlers.UserNotFoundException("User with ID: " + orderToCreate.getUserID() + " not found!");
+                });
 
         ProductEntity product = productRepoInterface.findById(orderToCreate.getProductID())
-                .orElseThrow(() -> new ExceptionHandlers.ProductNotFoundException("Product with ID: " + orderToCreate.getProductID() + " not found!"));
+                .orElseThrow(() -> {
+                    logger.error("Product with ID {} not found", orderToCreate.getProductID());
+                    return new ExceptionHandlers.ProductNotFoundException("Product with ID: " + orderToCreate.getProductID() + " not found!");
+                });
 
-        if(orderToCreate.getTotalAmount() != orderToCreate.getQuantity()*product.getPrice()){
+        if (orderToCreate.getTotalAmount() != orderToCreate.getQuantity() * product.getPrice()) {
+            logger.error("{}'s price is: {}. Total amount is not correct.", product.getProductName(), product.getPrice());
             throw new ExceptionHandlers.WrongPriceException(product.getProductName() + "'s price is: " + product.getPrice() + ". Total amount is not correct.");
         }
+
         OrderEntity orderEntity = OrderEntity.builder()
                 .userId(orderToCreate.getUserID())
                 .productId(orderToCreate.getProductID())

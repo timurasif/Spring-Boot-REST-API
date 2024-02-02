@@ -20,4 +20,15 @@ public class CreateOrderRequest {
     private LocalDate orderDate;
     private Integer quantity;
     private Double totalAmount;
+
+    @Override
+    public String toString() {
+        return "CreateOrderRequest{" +
+                "userID=" + userID +
+                ", productID='" + productID + '\'' +
+                ", orderDate='" + orderDate + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", totalAmount='" + totalAmount + '\'' +
+                '}';
+    }
 }

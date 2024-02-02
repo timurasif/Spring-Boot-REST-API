@@ -38,4 +38,16 @@ public class OrderEntity {
     private Integer quantity;
     @Column(name = "total_amount")
     private Double totalAmount;
+
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "orderID=" + orderID +
+                ", userID='" + userId + '\'' +
+                ", productID='" + productId + '\'' +
+                ", orderDate='" + orderDate + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", totalAmount='" + totalAmount + '\'' +
+                '}';
+    }
 }
