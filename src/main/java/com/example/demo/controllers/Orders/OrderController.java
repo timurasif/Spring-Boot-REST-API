@@ -27,6 +27,6 @@ public class OrderController {
         logger.info("Create order request: {}", createOrderRequest);
         OrderEntity createdOrder = orderService.createNewOrder(createOrderRequest);
         logger.info("Created order: {}", createdOrder);
-        return new Response(200, "Order created successfully.", createdOrder);
+        return new Response(201, "Order created successfully.", createdOrder);
     }
 }

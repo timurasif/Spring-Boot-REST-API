@@ -1,7 +1,9 @@
 package com.example.demo.services.userService;
 
 import com.example.demo.exceptions.ExceptionHandlers;
+import com.example.demo.models.Orders.OrderEntity;
 import com.example.demo.models.TopThreeUsersDTO;
+import com.example.demo.models.Users.CreateUserRequest;
 import com.example.demo.models.Users.UserEntity;
 import com.example.demo.repositories.interfaces.UsersRepoInterface;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,25 @@ public class UserService {
         Optional<UserEntity> user = usersRepoInterface.findById(id);
         if (user.isPresent()) {
             return user.get();
+        } else {
+            logger.error("User with ID {} not found", id);
+            throw new ExceptionHandlers.UserNotFoundException("User with ID " + id + " not found");
+        }
+    }
+
+    public UserEntity createUser(CreateUserRequest createUserRequest) {
+        UserEntity userEntity = UserEntity.builder()
+                .userName(createUserRequest.getUserName())
+                .email(createUserRequest.getEmail())
+                .address(createUserRequest.getAddress())
+                .build();
+        return usersRepoInterface.save(userEntity);
+    }
+
+    public void deleteUser(Integer id) {
+        if (usersRepoInterface.existsById(id)) {
+            usersRepoInterface.deleteById(id);
+            logger.info("User with ID {} deleted successfully", id);
         } else {
             logger.error("User with ID {} not found", id);
             throw new ExceptionHandlers.UserNotFoundException("User with ID " + id + " not found");

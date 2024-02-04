@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface UsersRepoInterface extends JpaRepository<UserEntity, Integer> {
 
-    Optional<UserEntity> findById(Integer id);
-
 //    Get the top 3 users who ordered the most products based on the number of all products in the orders.
 
     @Query(value = "SELECT users.user_id, users.user_name, sum(orders.quantity) as num_products_ordered\n" +

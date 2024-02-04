@@ -3,7 +3,6 @@ package com.example.demo.repositories.interfaces;
 import com.example.demo.models.Products.ProductEntity;
 import com.example.demo.models.TopThreeProductsDTO;
 import com.example.demo.models.TopThreeReorderedProductsDTO;
-import com.example.demo.models.Users.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,8 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepoInterface extends JpaRepository<ProductEntity, Integer> {
-
-    Optional<ProductEntity> findById(Integer id);
 
 //    Get the top 3 most ordered products based on number of all orders.
     @Query(value = "SELECT p.product_id, p.product_name, count(o.product_id) as count\n" +
