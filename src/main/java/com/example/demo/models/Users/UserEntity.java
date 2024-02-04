@@ -2,6 +2,9 @@ package com.example.demo.models.Users;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Users")
@@ -10,7 +13,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

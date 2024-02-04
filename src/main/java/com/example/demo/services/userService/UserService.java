@@ -9,6 +9,7 @@ import com.example.demo.repositories.interfaces.UsersRepoInterface;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public class UserService {
 
     private final UsersRepoInterface usersRepoInterface;
 
+    @Cacheable(cacheNames = "user", key = "#id")
     public UserEntity getById(Integer id) {
+        logger.info("User not found in cache, getting from the DB...");
         Optional<UserEntity> user = usersRepoInterface.findById(id);
         if (user.isPresent()) {
             return user.get();

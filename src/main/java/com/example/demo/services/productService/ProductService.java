@@ -9,7 +9,8 @@ import com.example.demo.repositories.interfaces.ProductRepoInterface;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,10 @@ public class ProductService {
 
     private final ProductRepoInterface productRepoInterface;
 
+    @Cacheable(cacheNames = "product", key = "#id")
     public ProductEntity getById(Integer id) {
+        System.out.println("Product not found in cache, getting from the DB...");
+        logger.info("Product not found in cache, getting from the DB...");
         Optional<ProductEntity> product = productRepoInterface.findById(id);
         if (product.isPresent()) {
             return product.get();
@@ -34,6 +38,7 @@ public class ProductService {
         }
     }
 
+    @CachePut(cacheNames = "product", key = "#result.productID")
     public ProductEntity createProduct(CreateProductRequest createProductRequest) {
         ProductEntity productEntity = ProductEntity.builder()
                 .productName(createProductRequest.getProductName())
@@ -43,6 +48,22 @@ public class ProductService {
         return productRepoInterface.save(productEntity);
     }
 
+    @CacheEvict(cacheNames = "product", key = "#productToAdd.productID")
+    public ProductEntity updateProduct(ProductEntity productToAdd) {
+        Optional<ProductEntity> product = productRepoInterface.findById(productToAdd.getProductID());
+        if (product.isPresent()) {
+            ProductEntity updatedProduct = product.get();
+            updatedProduct.setProductName(productToAdd.getProductName());
+            updatedProduct.setPrice(productToAdd.getPrice());
+            updatedProduct.setDescription(productToAdd.getDescription());
+            return productRepoInterface.save(updatedProduct);
+        } else {
+            logger.error("Product with ID {} not found", productToAdd.getProductID());
+            throw new ExceptionHandlers.ProductNotFoundException("Product with ID " + productToAdd.getProductID() + " not found");
+        }
+    }
+
+    @CacheEvict(cacheNames = "product", key = "#id")
     public void deleteProduct(Integer id) {
         if (productRepoInterface.existsById(id)) {
             productRepoInterface.deleteById(id);

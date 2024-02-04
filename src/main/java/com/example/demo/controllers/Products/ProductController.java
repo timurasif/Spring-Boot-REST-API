@@ -41,10 +41,19 @@ public class ProductController {
     @PostMapping("/create")
     @Operation(summary = "Create product.")
     public Response<Object> create(@Valid @RequestBody CreateProductRequest createProductRequest){
-        logger.info("Get Product request with: {}", createProductRequest);
-        ProductEntity createProduct = productService.createProduct(createProductRequest);
-        logger.info("Product created: {}", createProduct);
-        return new Response(201, "Product created successfully.", createProduct);
+        logger.info("Create Product request with: {}", createProductRequest);
+        ProductEntity createdProduct = productService.createProduct(createProductRequest);
+        logger.info("Product created: {}", createdProduct);
+        return new Response(201, "Product created successfully.", createdProduct);
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "Update product.")
+    public Response<Object> update(@Valid @RequestBody ProductEntity productEntity){
+        logger.info("Update Product request with: {}", productEntity);
+        ProductEntity updatedProduct = productService.updateProduct(productEntity);
+        logger.info("Product updated: {}", updatedProduct);
+        return new Response(201, "Product updated successfully.", updatedProduct);
     }
 
     @DeleteMapping("/delete")

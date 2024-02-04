@@ -2,6 +2,7 @@ package com.example.demo.models.Products;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
@@ -23,4 +24,14 @@ public class ProductEntity implements Serializable {
     private Double price;
     @Column(name = "description")
     private String description;
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                ", productId='" + productID + '\'' +
+                ", productName='" + productName + '\'' +
+                ", price='" + price + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
