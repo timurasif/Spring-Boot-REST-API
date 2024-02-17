@@ -8,6 +8,7 @@ import com.example.demo.models.Users.UserEntity;
 import com.example.demo.repositories.interfaces.OrderRepoInterface;
 import com.example.demo.repositories.interfaces.ProductRepoInterface;
 import com.example.demo.repositories.interfaces.UsersRepoInterface;
+import com.example.demo.services.EmailSender;
 import com.example.demo.services.helpers.Utils;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ public class OrderService {
     private final OrderRepoInterface orderRepoInterface;
     private final UsersRepoInterface usersRepoInterface;
     private final ProductRepoInterface productRepoInterface;
+    private final EmailSender emailSender;
+    public static final boolean ENABLE_EMAILS = false;
 
     public OrderEntity createNewOrder(CreateOrderRequest orderToCreate) {
         String orderCreatedAt = Utils.convertDateFormat(orderToCreate.getOrderDate());
@@ -55,6 +58,15 @@ public class OrderService {
         OrderEntity createdOrder = orderRepoInterface.saveAndFlush(orderEntity);
         createdOrder.setUser(user);
         createdOrder.setProduct(product);
+
+
+//        Commented out email sending
+//        Gmail requires access to less secure apps enabled for this
+
+        if(ENABLE_EMAILS){
+            emailSender.sendEmail(user.getEmail(), "Order received", "Hi " + user.getUserName() +
+                    ", We have received your order. Thanks!");
+        }
 
         return createdOrder;
     }
