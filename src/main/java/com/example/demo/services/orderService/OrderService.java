@@ -59,10 +59,6 @@ public class OrderService {
         createdOrder.setUser(user);
         createdOrder.setProduct(product);
 
-
-//        Commented out email sending
-//        Gmail requires access to less secure apps enabled for this
-
         if(ENABLE_EMAILS){
             emailSender.sendEmail(user.getEmail(), "Order received", "Hi " + user.getUserName() +
                     ", We have received your order. Thanks!");
